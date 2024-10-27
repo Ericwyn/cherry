@@ -1,0 +1,12 @@
+### 剪贴板图片获取
+POST http://127.0.0.1:36677/upload
+
+### 本地文件上传
+POST http://127.0.0.1:36677/upload
+Content-Type: application/json
+
+{
+  "list": [
+    "C:\\Users\\Ericwyn\\Pictures\\JPG_Test.jpg"
+  ]
+}

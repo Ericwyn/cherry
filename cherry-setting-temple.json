@@ -1,0 +1,16 @@
+{
+  "server": {
+    "port": 36677
+  },
+  "s3": {
+    "accessKeyID": "s3-accessKeyID",
+    "secretAccessKey": "s3-secretAccessKey",
+    "bucketName": "s3-bucketName",
+    "uploadPath": "test-path/{timestampMS}.{extName}",
+    "region": "region",
+    "endpoint": "endpoint",
+    "urlPrefix": "https://cherry.custom-domain.com",
+    "rejectUnauthorized": true,
+    "disableBucketPrefixToURL": true
+  }
+}

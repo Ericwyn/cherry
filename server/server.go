@@ -60,6 +60,11 @@ func StartCherryServer() {
 		c.JSON(200, successResp(resultList))
 	})
 
-	router.Run(":" + strconv.Itoa(config.Server.Port))
+	err := router.Run(":" + strconv.Itoa(config.Server.Port))
+	if err != nil {
+		log.E("启动服务失败: ", err.Error())
+		os.Exit(-1)
+		return
+	}
 
 }

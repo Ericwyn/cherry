@@ -32,7 +32,7 @@ func StartCherryServer() {
 		var uploadUrl string
 
 		if err := c.ShouldBindJSON(&reqBody); err != nil {
-			log.D("No JSON provided, trying clipboard...")
+			log.D("剪贴板图片上传")
 			imgData, err = utils.GetClipboardImageData()
 			if err == nil && imgData != nil {
 				uploadUrl, err = uploader.Upload(uploader.S3, imgData)
@@ -51,6 +51,7 @@ func StartCherryServer() {
 
 		var resultList []string
 		for _, filePath := range reqBody.List {
+			log.D("本地文件上传: " + filePath)
 			localFileByte, err := os.ReadFile(filePath)
 			if err != nil {
 				c.JSON(400, failResp(err.Error()))

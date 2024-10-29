@@ -18,6 +18,7 @@ func onReady() {
 	systray.SetTitle("Cherry")
 
 	systray.AddMenuItem("程序运行中...", "程序运行中...")
+	systray.AddMenuItem("版本: "+conf.Version, "版本: "+conf.Version)
 	systray.AddSeparator()
 
 	mReloadConfig := systray.AddMenuItem("重载图床配置", "")

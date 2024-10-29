@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+const Version = "0.0.2"
+
 type CherryConfig struct {
 	Server Server `json:"server"`
 	S3     S3     `json:"s3"`

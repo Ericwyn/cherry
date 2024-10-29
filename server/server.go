@@ -5,6 +5,7 @@ import (
 	"cherry/uploader"
 	"cherry/utils"
 	"cherry/utils/conf"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"os"
 	"strconv"
@@ -16,6 +17,15 @@ func StartCherryServer() {
 
 	router := gin.Default()
 
+	// Configure CORS
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // Change this to your specific domain if needed
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
 	router.POST("/upload", func(c *gin.Context) {
 		var reqBody RequestBody
 		var imgData []byte
@@ -25,7 +35,6 @@ func StartCherryServer() {
 			log.D("No JSON provided, trying clipboard...")
 			imgData, err = utils.GetClipboardImageData()
 			if err == nil && imgData != nil {
-				//SaveImage(img, format)
 				uploadUrl, err = uploader.Upload(uploader.S3, imgData)
 				if err != nil {
 					log.E("upload err, ", err.Error())
@@ -52,7 +61,6 @@ func StartCherryServer() {
 				log.E("upload err, ", err.Error())
 				c.JSON(400, failResp(err.Error()))
 			} else {
-				//c.JSON(200, successResp(true, []string{uploadUrl}))
 				resultList = append(resultList, uploadUrl)
 			}
 		}
@@ -63,8 +71,7 @@ func StartCherryServer() {
 	err := router.Run(":" + strconv.Itoa(config.Server.Port))
 	if err != nil {
 		log.E("启动服务失败: ", err.Error())
-		os.Exit(-1)
+		os.Exit(0)
 		return
 	}
-
 }

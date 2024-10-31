@@ -1,4 +1,4 @@
-package tray
+package ui
 
 // CherryIcon
 // 通过 icon 文件夹里面的 icon_test.go 获取

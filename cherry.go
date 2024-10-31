@@ -2,7 +2,7 @@ package main
 
 import (
 	"cherry/server"
-	"cherry/tray"
+	"cherry/ui"
 	"cherry/utils/conf"
 )
 
@@ -11,5 +11,5 @@ func main() {
 
 	go server.StartCherryServer()
 
-	tray.InitSysTray()
+	ui.InitSysTray()
 }

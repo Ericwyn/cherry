@@ -13,7 +13,8 @@ type CherryConfig struct {
 	S3     S3     `json:"s3"`
 }
 type Server struct {
-	Port int `json:"port"`
+	Port          int  `json:"port"`
+	ShowSysNotify bool `json:"showSysNotify"`
 	//Host   string `json:"host"`
 	//Enable bool   `json:"enable"`
 }

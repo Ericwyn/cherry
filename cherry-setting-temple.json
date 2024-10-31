@@ -1,6 +1,7 @@
 {
   "server": {
-    "port": 36677
+    "port": 36677,
+    "showSysNotify": true
   },
   "s3": {
     "accessKeyID": "s3-accessKeyID",

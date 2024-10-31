@@ -2,13 +2,14 @@ package server
 
 import (
 	"cherry/log"
+	"cherry/ui"
 	"cherry/uploader"
-	"cherry/utils"
 	"cherry/utils/conf"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func StartCherryServer() {
@@ -28,45 +29,37 @@ func StartCherryServer() {
 
 	router.POST("/upload", func(c *gin.Context) {
 		var reqBody RequestBody
-		var imgData []byte
 		var uploadUrl string
 
-		if err := c.ShouldBindJSON(&reqBody); err != nil {
-			log.D("剪贴板图片上传")
-			imgData, err = utils.GetClipboardImageData()
-			if err == nil && imgData != nil {
-				uploadUrl, err = uploader.Upload(uploader.S3, imgData)
-				if err != nil {
-					log.E("upload err, ", err.Error())
-					c.JSON(400, failResp(err.Error()))
-				} else {
-					c.JSON(200, successResp([]string{uploadUrl}))
-				}
-				return
-			} else {
-				c.JSON(400, failResp("Failed to get image from clipboard"))
-				return
-			}
-		}
+		err := c.ShouldBindJSON(&reqBody)
 
-		var resultList []string
-		for _, filePath := range reqBody.List {
-			log.D("本地文件上传: " + filePath)
-			localFileByte, err := os.ReadFile(filePath)
-			if err != nil {
-				c.JSON(400, failResp(err.Error()))
-				return
-			}
-			uploadUrl, err = uploader.Upload(uploader.S3, localFileByte)
+		if err == nil && len(reqBody.List) != 0 {
+			resultList, err := uploader.UploadFromLocalFile(uploader.S3, reqBody.List)
 			if err != nil {
 				log.E("upload err, ", err.Error())
 				c.JSON(400, failResp(err.Error()))
 			} else {
 				resultList = append(resultList, uploadUrl)
 			}
-		}
 
-		c.JSON(200, successResp(resultList))
+			if len(resultList) != 0 {
+				ui.ShowNotify(strconv.Itoa(len(resultList)) + " 张图片上传成功: " + strings.Join(resultList, ", "))
+			}
+			c.JSON(200, successResp(resultList))
+			return
+		} else {
+			log.D("参数解析失败, 剪贴板图片上传")
+
+			uploadUrl, err = uploader.UploadFromClipboard(uploader.S3)
+			if err != nil {
+				log.E("upload err, ", err.Error())
+				c.JSON(400, failResp(err.Error()))
+			} else {
+				ui.ShowNotify("1 张图片上传成功: " + uploadUrl)
+				c.JSON(200, successResp([]string{uploadUrl}))
+			}
+			return
+		}
 	})
 
 	err := router.Run(":" + strconv.Itoa(config.Server.Port))

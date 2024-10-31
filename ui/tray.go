@@ -1,10 +1,10 @@
-package tray
+package ui
 
 import (
 	"cherry/log"
+	"cherry/uploader"
 	"cherry/utils"
 	"cherry/utils/conf"
-	"fmt"
 	"github.com/getlantern/systray"
 	"os"
 )
@@ -19,6 +19,7 @@ func onReady() {
 
 	systray.AddMenuItem("程序运行中...", "程序运行中...")
 	systray.AddMenuItem("版本: "+conf.Version, "版本: "+conf.Version)
+	mUploadFromClipboard := systray.AddMenuItem("剪贴板图片上传", "剪贴板图片上传")
 	systray.AddSeparator()
 
 	mReloadConfig := systray.AddMenuItem("重载图床配置", "")
@@ -26,16 +27,19 @@ func onReady() {
 	systray.AddSeparator()
 
 	mQuit := systray.AddMenuItem("退出", "退出程序")
-	// Sets the icon of a menu item. Only available on Mac and Windows.
-	go func() {
-		<-mQuit.ClickedCh
-		fmt.Println("Requesting quit")
-		systray.Quit()
-		fmt.Println("Finished quitting")
-	}()
 
 	for {
 		select {
+		case <-mUploadFromClipboard.ClickedCh:
+			//utils.UploadFromClipboard()
+			uploadUrl, err := uploader.UploadFromClipboard(uploader.S3)
+			if err != nil {
+				log.E("剪贴板上传失败 ", err.Error())
+				ShowNotify("剪贴板图片上传失败: " + err.Error())
+				return
+			} else {
+				ShowNotify("剪贴板图片上传成功: " + uploadUrl)
+			}
 		case <-mOpenDir.ClickedCh:
 			utils.OpenSysDirectory(conf.GetRunnerPath())
 		case <-mReloadConfig.ClickedCh:

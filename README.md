@@ -35,15 +35,15 @@ cherry picup
 {
   "server": {
     "port": 36677,
-    "host": "127.0.0.1",
-    "enable": true
+    "showSysNotify": true,
+    "flushToClipboard": true
   },
   "s3": {
     "accessKeyID": "s3-accessKeyID",
     "secretAccessKey": "s3-secretAccessKey",
     "bucketName": "s3-bucketName",
     "uploadPath": "test-path/{timestampMS}.{extName}",
-    "region": null,
+    "region": "region",
     "endpoint": "endpoint",
     "urlPrefix": "https://cherry.custom-domain.com",
     "rejectUnauthorized": true,
@@ -52,4 +52,7 @@ cherry picup
 }
 ```
 - server 本地服务器设置
+  - port 服务端口, 默认 36677 就好
+  - showSysNotify 是否显示系统通知(上传成功 / 失败通知)
+  - flushToClipboard 是否将上传结果复制到剪切板
 - s3: s3 接口配置

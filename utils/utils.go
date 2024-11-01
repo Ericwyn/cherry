@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strings"
 )
 
 func GetClipboardImageData() ([]byte, error) {
@@ -21,22 +20,8 @@ func GetClipboardImageData() ([]byte, error) {
 	return data, nil
 }
 
-func GetClipboardImage() (image.Image, string) {
-	data, err := GetClipboardImageData()
-
-	if err != nil {
-		log.E("get clipboardImg err, " + err.Error())
-		return nil, ""
-	}
-
-	reader := strings.NewReader(string(data))
-	img, format, err := image.Decode(reader)
-	if err != nil {
-		log.E("decode image from clipboard err, ", err.Error())
-		return nil, ""
-	}
-
-	return img, format
+func WriteUrlToClipboard(result string) {
+	clipboard.Write(clipboard.FmtText, []byte(result))
 }
 
 func DetectImageFormat(data []byte) string {

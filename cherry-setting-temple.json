@@ -1,7 +1,8 @@
 {
   "server": {
     "port": 36677,
-    "showSysNotify": true
+    "showSysNotify": true,
+    "flushToClipboard": true
   },
   "s3": {
     "accessKeyID": "s3-accessKeyID",

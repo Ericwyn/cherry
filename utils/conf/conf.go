@@ -13,8 +13,9 @@ type CherryConfig struct {
 	S3     S3     `json:"s3"`
 }
 type Server struct {
-	Port          int  `json:"port"`
-	ShowSysNotify bool `json:"showSysNotify"`
+	Port                 int  `json:"port"`
+	ShowSysNotify        bool `json:"showSysNotify"`    // 是否在上传完成之后展示通知
+	FlushResultClipboard bool `json:"flushToClipboard"` // 是否在上传完成之后将链接结果写入到剪切板
 	//Host   string `json:"host"`
 	//Enable bool   `json:"enable"`
 }

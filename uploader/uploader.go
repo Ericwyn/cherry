@@ -4,6 +4,7 @@ import (
 	"cherry/log"
 	"cherry/uploader/s3"
 	"cherry/utils"
+	"cherry/utils/conf"
 	"errors"
 	"os"
 )
@@ -56,6 +57,12 @@ func UploadFromClipboard(name UploaderName) (string, error) {
 		}
 	}
 	upload, err := Upload(name, imgData)
+
+	if err == nil {
+		if conf.GetCherryConfig().Server.ShowSysNotify {
+			utils.WriteUrlToClipboard(upload)
+		}
+	}
 	return upload, err
 }
 

@@ -43,7 +43,8 @@ func StartCherryServer() {
 			}
 
 			if len(resultList) != 0 {
-				ui.ShowNotify(strconv.Itoa(len(resultList)) + " 张图片上传成功: " + strings.Join(resultList, ", "))
+				ui.ShowSuccessResultNotify(resultList)
+				ui.FlushResultClipboard(strings.Join(resultList, "\n"))
 			}
 			c.JSON(200, successResp(resultList))
 			return
@@ -55,7 +56,10 @@ func StartCherryServer() {
 				log.E("upload err, ", err.Error())
 				c.JSON(400, failResp(err.Error()))
 			} else {
-				ui.ShowNotify("1 张图片上传成功: " + uploadUrl)
+
+				ui.ShowSuccessResultNotify([]string{uploadUrl})
+				ui.FlushResultClipboard(uploadUrl)
+
 				c.JSON(200, successResp([]string{uploadUrl}))
 			}
 			return

@@ -18,7 +18,7 @@ func onReady() {
 	systray.SetTitle("Cherry")
 
 	systray.AddMenuItem("程序运行中...", "程序运行中...")
-	systray.AddMenuItem("版本: "+conf.Version, "版本: "+conf.Version)
+	mVersion := systray.AddMenuItem("版本: "+conf.Version, "版本: "+conf.Version)
 	mUploadFromClipboard := systray.AddMenuItem("剪贴板图片上传", "剪贴板图片上传")
 	systray.AddSeparator()
 
@@ -30,15 +30,17 @@ func onReady() {
 
 	for {
 		select {
+		case <-mVersion.ClickedCh:
+			log.I("当前版本: ", conf.Version)
 		case <-mUploadFromClipboard.ClickedCh:
 			//utils.UploadFromClipboard()
 			uploadUrl, err := uploader.UploadFromClipboard(uploader.S3)
 			if err != nil {
 				log.E("剪贴板上传失败 ", err.Error())
-				ShowNotify("剪贴板图片上传失败: " + err.Error())
-				return
+				ShowErrResultNotify("剪贴板读取失败: " + err.Error())
 			} else {
-				ShowNotify("剪贴板图片上传成功: " + uploadUrl)
+				ShowSuccessResultNotify([]string{uploadUrl})
+				FlushResultClipboard(uploadUrl)
 			}
 		case <-mOpenDir.ClickedCh:
 			utils.OpenSysDirectory(conf.GetRunnerPath())
@@ -47,7 +49,6 @@ func onReady() {
 			conf.LoadCherryConfig()
 		case <-mQuit.ClickedCh:
 			systray.Quit()
-			return
 		}
 	}
 

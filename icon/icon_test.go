@@ -7,7 +7,7 @@ import (
 )
 
 func TestPrintIconSlice(t *testing.T) {
-	iconPath := "D:\\Chaos\\go\\cherry-picup\\icon\\icon_128.ico"
+	iconPath := "/home/ericwyn/dev/golang/cherry/icon/icon_64.png"
 	iconBytes, err := os.ReadFile(iconPath)
 	if err != nil {
 		fmt.Println("Error reading file:", err)
